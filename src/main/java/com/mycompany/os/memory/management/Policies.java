@@ -24,7 +24,7 @@ public class Policies {
             for(int y = 0;y<newPartitions.size();y++){
                 
                 if(newPartitions.get(y).getSize()>=newProcesses.get(x).getSize() && newPartitions.get(y).getFull() == false){
-                    Partition fragment = newPartitions.get(y).setProcess(newProcesses.get(x), newPartitions.size());
+                    Partition fragment = newPartitions.get(y).assignProcess(newProcesses.get(x));
                     if(fragment != null){
                         newPartitions.add(y+1,fragment);
                     }
@@ -37,10 +37,62 @@ public class Policies {
                 }
             }
         }
-        
+        OSMemoryManagement.TotalPartitions++;
         return newPartitions;
     }
     
+    
+    static List<Partition> BestFit(List<Partition> partitions, List<Process> processes){
+        List<Partition> newPartitions = Partition.DeepCopy(partitions);
+        List<Process> newProcesses = Process.DeepCopy(processes);
+        
+        int procsSize = newProcesses.size();
+        OSMemoryManagement.UnAllocatedProcesses = new ArrayList<>();
+        
+        for(int x = 0;x<procsSize;x++){
+            Partition bestPartition = Partition.BestFit(newPartitions, newProcesses.get(x));
+            if(bestPartition != null){
+                int index = newPartitions.indexOf(bestPartition);
+                Partition fragment = bestPartition.assignProcess(newProcesses.get(x));
+                if(fragment!=null){
+                    newPartitions.add(index+1,fragment);
+                }
+            } else{
+                System.out.println(newProcesses.get(x).getName() + " Cannot be Allocated.");
+                OSMemoryManagement.UnAllocatedProcesses.add(newProcesses.get(x));
+            }
+            
+        }
+        
+        OSMemoryManagement.TotalPartitions++;
+        return newPartitions;
+    }
+    
+    static List<Partition> WorstFit(List<Partition> partitions, List<Process> processes){
+        List<Partition> newPartitions = Partition.DeepCopy(partitions);
+        List<Process> newProcesses = Process.DeepCopy(processes);
+        
+        int procsSize = newProcesses.size();
+        OSMemoryManagement.UnAllocatedProcesses = new ArrayList<>();
+        
+        for(int x = 0;x<procsSize;x++){
+            Partition bestPartition = Partition.WorstFit(newPartitions, newProcesses.get(x));
+            if(bestPartition != null){
+                int index = newPartitions.indexOf(bestPartition);
+                Partition fragment = bestPartition.assignProcess(newProcesses.get(x));
+                if(fragment!=null){
+                    newPartitions.add(index+1,fragment);
+                }
+            } else{
+                System.out.println(newProcesses.get(x).getName() + " Cannot be Allocated.");
+                OSMemoryManagement.UnAllocatedProcesses.add(newProcesses.get(x));
+            }
+            
+        }
+        
+        OSMemoryManagement.TotalPartitions++;
+        return newPartitions;
+    }
     
     static void CompactList(List<Partition> partitions){
         Partition newPart = new Partition("Parition"+(partitions.size()),0);

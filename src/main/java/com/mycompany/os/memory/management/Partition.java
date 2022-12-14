@@ -64,14 +64,14 @@ public class Partition {
     };
     
     
-    Partition setProcess(Process p, int totalParitions){
+    Partition assignProcess(Process p){
         Partition newP = null;
         
         if(p.getSize()<getSize()){
             //External Fragmantaion
             newP = new Partition();
             newP.setSize(getSize()-p.getSize());
-            newP.setName("Parition"+(totalParitions));
+            newP.setName("Parition"+(OSMemoryManagement.TotalPartitions++));
             setSize(p.getSize());
         }
         
@@ -90,5 +90,44 @@ public class Partition {
         }
 
         return copy;
+    }
+    
+    
+    static Partition BestFit(List<Partition> ps,Process p){
+        Partition best = null;
+        int size = ps.size();
+        int diffrence=Integer.MAX_VALUE;
+        int bestIndex=-1;
+        for(int i=0;i<size;i++){
+            if(ps.get(i).getSize()-p.getSize()<diffrence && ps.get(i).getSize()-p.getSize()>=0 && ps.get(i).getFull() == false){
+                diffrence = ps.get(i).getSize()-p.getSize();
+                bestIndex = i;
+            }
+        }
+
+        if(bestIndex!= -1){
+            best = ps.get(bestIndex);
+        }
+        
+        return best;
+    }
+    
+    static Partition WorstFit(List<Partition> ps,Process p){
+        Partition worst = null;
+        int size = ps.size();
+        int diffrence=Integer.MIN_VALUE;
+        int worstIndex=-1;
+        for(int i=0;i<size;i++){
+            if(ps.get(i).getSize()-p.getSize()>diffrence && ps.get(i).getSize()-p.getSize()>=0 && ps.get(i).getFull() == false){
+                diffrence = ps.get(i).getSize()-p.getSize();
+                worstIndex = i;
+            }
+        }
+
+        if(worstIndex!= -1){
+            worst = ps.get(worstIndex);
+        }
+        
+        return worst;
     }
 }
