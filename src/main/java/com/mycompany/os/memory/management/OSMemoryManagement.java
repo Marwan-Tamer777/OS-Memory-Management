@@ -31,7 +31,7 @@ public class OSMemoryManagement {
         int tempI;
         
         //Testing.
-        /*Partitions.add(new Partition("Partition0",90));
+        Partitions.add(new Partition("Partition0",90));
         Partitions.add(new Partition("Partition1",20));
         Partitions.add(new Partition("Partition2",5));
         Partitions.add(new Partition("Partition3",30));
@@ -42,7 +42,7 @@ public class OSMemoryManagement {
         Processes.add(new Process("Process2",90));
         Processes.add(new Process("Process3",30));
         Processes.add(new Process("Process4",100));
-        */
+        /*
         System.out.println("Please Enter Partitions Count: ");
         tempI = scan.nextInt();
         for(int i=0;i<tempI;i++){
@@ -58,7 +58,7 @@ public class OSMemoryManagement {
             p.enterProcess();
             Processes.add(p);
         }
-        
+        */
         while(true){
             System.out.print("Please Select Policy:\n" +
             "1. First-Fit policy.\n" +"2. Worst-Fit policy.\n"+  "3. Best-Fit policy.\n" + "4.Exit.\n"); 
